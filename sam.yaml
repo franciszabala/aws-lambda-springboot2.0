@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Spring API - my.service.butt::my-service-butt
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  MyServiceButtFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: my.service.butt.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: target/my-service-butt-1.0-SNAPSHOT-lambda-package.zip
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 15
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  MyServiceButtApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ping'
+    Export:
+      Name: MyServiceButtApi
